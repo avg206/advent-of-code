@@ -42,7 +42,7 @@ SAMPLE_FILE=$(cat src/sample.kt)
 SAMPLE_FILE="${SAMPLE_FILE//<year>/$YEAR}"
 # Apply day
 SAMPLE_FILE="${SAMPLE_FILE//<day>/$DAY_FORMATTED}"
-echo -e "$SAMPLE_FILE" > "src/$YEAR/Day$DAY_FORMATTED.kt"
+echo -e "$SAMPLE_FILE" > "src/$YEAR/${YEAR}_$DAY_FORMATTED.kt"
 
 # Save personal test case
 echo -e "$TEXT_DATA" > "src/$YEAR/Day$DAY_FORMATTED.txt"
