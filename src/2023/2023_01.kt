@@ -68,12 +68,12 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2023/Day01_test")
+    val testInput = readInput("2023/2023_01_test")
     check(part1(testInput) == 142)
-    val testInput2 = readInput("2023/Day01_test_2")
+    val testInput2 = readInput("2023/2023_01_test_2")
     check(part2(testInput2) == 281)
 
-    val input = readInput("2023/Day01")
+    val input = readInput("2023/2023_01")
     part1(input).println()
     check(part1(input) == 55834)
     part2(input).println()

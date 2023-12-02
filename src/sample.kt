@@ -8,10 +8,10 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("<year>/Day<day>_test")
+    val testInput = readInput("<year>/<year>_<day>_test")
     check(part1(testInput) == 1)
 
-    val input = readInput("<year>/Day<day>")
+    val input = readInput("<year>/<year>_<day>")
     part1(input).println()
     part2(input).println()
 }

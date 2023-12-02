@@ -45,11 +45,11 @@ SAMPLE_FILE="${SAMPLE_FILE//<day>/$DAY_FORMATTED}"
 echo -e "$SAMPLE_FILE" > "src/$YEAR/${YEAR}_$DAY_FORMATTED.kt"
 
 # Save personal test case
-echo -e "$TEXT_DATA" > "src/$YEAR/Day$DAY_FORMATTED.txt"
-truncate -s -1 "src/$YEAR/Day$DAY_FORMATTED.txt"
+echo -e "$TEXT_DATA" > "src/$YEAR/${YEAR}_$DAY_FORMATTED.txt"
+truncate -s -1 "src/$YEAR/${YEAR}_$DAY_FORMATTED.txt"
 
 # Create empty file for sample test data
-echo "" > "src/$YEAR/Day$(echo $DAY_FORMATTED)_test.txt"
+echo "" > "src/$YEAR/${YEAR}_$(echo $DAY_FORMATTED)_test.txt"
 
 
 
