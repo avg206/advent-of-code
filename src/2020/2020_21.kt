@@ -88,9 +88,9 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/Day21_test")
+    val testInput = readInput("2020/2020_21_test")
     check(solve(testInput) == Pair(5, "mxmxvkd,sqjhc,fvjkl"))
 
-    val input = readInput("2020/Day21")
+    val input = readInput("2020/2020_21")
     solve(input).println()
 }

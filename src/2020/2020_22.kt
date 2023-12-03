@@ -86,11 +86,11 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/Day22_test")
+    val testInput = readInput("2020/2020_22_test")
     check(part1(testInput) == 306)
     check(part2(testInput) == 291)
 
-    val input = readInput("2020/Day22")
+    val input = readInput("2020/2020_22")
     part1(input).println()
     part2(input).println()
 }

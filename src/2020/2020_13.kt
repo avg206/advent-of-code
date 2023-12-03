@@ -44,7 +44,7 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/Day13_test")
+    val testInput = readInput("2020/2020_13_test")
     check(part1(testInput) == 295)
 
     check(part2(testInput[1]) == 1068781L)
@@ -54,7 +54,7 @@ fun main() {
     check(part2("67,7,x,59,61") == 1261476L)
     check(part2("1789,37,47,1889") == 1202161486L)
 
-    val input = readInput("2020/Day13")
+    val input = readInput("2020/2020_13")
     part1(input).println()
     part2(input[1]).println()
 }

@@ -112,17 +112,17 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/Day19_test")
+    val testInput = readInput("2020/2020_19_test")
     check(part1(testInput) == 2)
-    val testInput2 = readInput("2020/Day19_test_2")
+    val testInput2 = readInput("2020/2020_19_test_2")
     check(part2(testInput2) == 12)
 
     println("-----")
 
-    val input = readInput("2020/Day19")
+    val input = readInput("2020/2020_19")
     check(part1(input) == 265)
     part1(input).println()
-    val input2 = readInput("2020/Day19_2")
+    val input2 = readInput("2020/2020_19_2")
     check(part2(input2) == 394)
     part2(input2).println()
 }

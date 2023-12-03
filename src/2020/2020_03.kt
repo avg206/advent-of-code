@@ -35,11 +35,11 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/Day03_test")
+    val testInput = readInput("2020/2020_03_test")
     check(part1(testInput) == 7L)
     check(part2(testInput) == 336L)
 
-    val input = readInput("2020/Day03")
+    val input = readInput("2020/2020_03")
     part1(input).println()
     part2(input).println()
 }
