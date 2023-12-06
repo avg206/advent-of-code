@@ -104,6 +104,7 @@ fun main() {
     check(part1(testInput) == 4361)
     check(part2(testInput) == 467835)
 
+    // add `.` ad the end of each input line
     val input = readInput("2023/2023_03")
     check(part1(input) == 517021)
     check(part2(input) == 81296995)
