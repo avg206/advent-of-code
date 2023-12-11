@@ -1,3 +1,7 @@
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+
 fun main() {
     data class Dot(var x: Int, var y: Int) {
         override fun toString(): String {
@@ -7,13 +11,6 @@ fun main() {
         operator fun plus(dot: Dot): Dot {
             return Dot(x + dot.x, y + dot.y)
         }
-    }
-
-    val moves = buildList {
-        add(Dot(-1, 0))
-        add(Dot(0, 1))
-        add(Dot(0, -1))
-        add(Dot(1, 0))
     }
 
     fun solve(input: List<String>, gap: Long): Long {
@@ -50,50 +47,23 @@ fun main() {
             }
         }
 
-        fun distances(from: Dot, tos: List<Dot>): List<Long> {
-            val result = MutableList(input.size) { MutableList(input[0].length) { 0L } }
-
-            result[from.x][from.y] = 0L
-            val queue = mutableListOf(from)
-
-            while (queue.isNotEmpty()) {
-                val point = queue.removeFirst()
-
-                moves.forEach { move ->
-                    val target = point + move
-
-                    if (target.x !in input.indices ||
-                        target.y !in input[0].indices ||
-                        result[target.x][target.y] != 0L
-                    ) {
-                        return@forEach
-                    }
-
-                    val isExpanded = expandedRows.contains(target.x) || expandedColumns.contains(target.y)
-
-                    result[target.x][target.y] = when (isExpanded) {
-                        true -> result[point.x][point.y] + gap
-                        false -> result[point.x][point.y] + 1L
-                    }
-
-                    queue.add(target)
-                }
-            }
-
-            return tos.map { result[it.x][it.y] }
-        }
-
-        val result = mutableMapOf<String, Long>()
+        var result = 0L
 
         for (i in symbols.indices) {
-            val distance = distances(symbols[i], symbols)
-
             for (j in i + 1 until symbols.size) {
-                result["${symbols[i]} - ${symbols[j]}"] = distance[j]
+                var distance = (abs(symbols[i].x - symbols[j].x) + abs(symbols[i].y - symbols[j].y)).toLong()
+
+                val xRange = min(symbols[i].x, symbols[j].x)..max(symbols[i].x, symbols[j].x)
+                val yRange = min(symbols[i].y, symbols[j].y)..max(symbols[i].y, symbols[j].y)
+
+                distance += (expandedRows.filter { it in xRange }.size) * (gap - 1)
+                distance += (expandedColumns.filter { it in yRange }.size) * (gap - 1)
+
+                result += distance
             }
         }
 
-        return result.values.sum()
+        return result
     }
 
     // test if implementation meets criteria from the description, like:
@@ -103,6 +73,9 @@ fun main() {
     check(solve(testInput, 100) == 8_410L)
 
     val input = readInput("2023/2023_11")
+    check(solve(input, 1) == 9_427_545L)
+    check(solve(input, 2) == 9_947_476L)
+    check(solve(input, 1_000_000) == 519_939_907_614L)
     solve(input, 2).println()
     solve(input, 1_000_000).println()
 }
