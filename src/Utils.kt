@@ -23,6 +23,31 @@ fun Any?.println() = println(this)
 /*
  * Memorization
  */
+interface Memo1<A, R> { // 1
+    fun recurse(a: A): R
+}
+
+// 2
+fun <A, R> (Memo1<A, R>.(A) -> R).memoize(): (A) -> R {
+    val memoized = object : Memoized1<A, R>() { // 3
+        override fun Memo1<A, R>.function(a: A): R = this@memoize(a)
+    }
+    return { a -> // 4
+        memoized.execute(a)
+    }
+}
+
+abstract class Memoized1<A, R> { // 5
+    private val cache = mutableMapOf<A, R>()
+    private val memo = object : Memo1<A, R> {
+        override fun recurse(a: A): R = cache.getOrPut(a) { function(a) }
+    }
+
+    protected abstract fun Memo1<A, R>.function(a: A): R
+
+    fun execute(a: A): R = memo.recurse(a)
+}
+
 interface Memo2<A, B, R> {
     fun recurse(a: A, b: B): R
 }
