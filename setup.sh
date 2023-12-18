@@ -36,13 +36,18 @@ echo "Creating files..."
 # Add leading zero for days 1 - 9
 printf -v DAY_FORMATTED "%02d" $DAY
 
+
 # Create new solution file
 SAMPLE_FILE=$(cat src/sample.kt)
 # Apply year
 SAMPLE_FILE="${SAMPLE_FILE//<year>/$YEAR}"
 # Apply day
 SAMPLE_FILE="${SAMPLE_FILE//<day>/$DAY_FORMATTED}"
+
+if [ ! -f "src/$YEAR/${YEAR}_$DAY_FORMATTED.kt" ]
+then
 echo -e "$SAMPLE_FILE" > "src/$YEAR/${YEAR}_$DAY_FORMATTED.kt"
+fi
 
 # Save personal test case
 echo -e "$TEXT_DATA" > "src/$YEAR/${YEAR}_$DAY_FORMATTED.txt"
