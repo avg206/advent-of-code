@@ -1,17 +1,8 @@
 import kotlin.math.abs
-
-data class Pointer(val x: Long, val y: Long) {
-    operator fun plus(pointer: Pointer): Pointer {
-        return Pointer(x + pointer.x, y + pointer.y)
-    }
-
-    operator fun times(pointer: Long): Pointer {
-        return Pointer(x * pointer, y * pointer)
-    }
-}
+import helpers.point.LongPoint
 
 fun main() {
-    fun solver(points: List<Pointer>): Long {
+    fun solver(points: List<LongPoint>): Long {
         var S = 0L
         var P = 0L
 
@@ -27,17 +18,17 @@ fun main() {
     }
 
     fun part1(input: List<String>): Long {
-        val points = mutableListOf(Pointer(0, 0))
+        val points = mutableListOf(LongPoint(0, 0))
 
         input.forEach { line ->
             val (direction, step, _) = line.split(" ")
             val last = points.last()
 
             val newPoint = when (direction) {
-                "R" -> last + (Pointer(0, 1) * step.toLong())
-                "D" -> last + (Pointer(1, 0) * step.toLong())
-                "L" -> last + (Pointer(0, -1) * step.toLong())
-                "U" -> last + (Pointer(-1, 0) * step.toLong())
+                "R" -> last + (LongPoint(0, 1) * step.toLong())
+                "D" -> last + (LongPoint(1, 0) * step.toLong())
+                "L" -> last + (LongPoint(0, -1) * step.toLong())
+                "U" -> last + (LongPoint(-1, 0) * step.toLong())
                 else -> throw Exception("Unknown move")
             }
 
@@ -48,7 +39,7 @@ fun main() {
     }
 
     fun part2(input: List<String>): Long {
-        val points = mutableListOf(Pointer(0, 0))
+        val points = mutableListOf(LongPoint(0, 0))
 
         input.forEach { line ->
             val (_, _, color) = line.split(" ")
@@ -59,10 +50,10 @@ fun main() {
             val last = points.last()
 
             val newPoint = when (move) {
-                0 -> last + (Pointer(0, 1) * step)
-                1 -> last + (Pointer(1, 0) * step)
-                2 -> last + (Pointer(0, -1) * step)
-                3 -> last + (Pointer(-1, 0) * step)
+                0 -> last + (LongPoint(0, 1) * step)
+                1 -> last + (LongPoint(1, 0) * step)
+                2 -> last + (LongPoint(0, -1) * step)
+                3 -> last + (LongPoint(-1, 0) * step)
                 else -> throw Exception("Unknown move")
             }
 

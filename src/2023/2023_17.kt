@@ -1,25 +1,19 @@
-import org.w3c.dom.ranges.Range
 import java.util.PriorityQueue
+import helpers.point.Point
 
 enum class Direction {
     Vertical, Horizontal
 }
 
-data class Dot(val x: Int, val y: Int) {
-    operator fun plus(newDot: Dot): Dot {
-        return Dot(x + newDot.x, y + newDot.y)
-    }
-}
-
-typealias Node = Triple<Int, Dot, Direction>
+typealias Node = Triple<Int, Point, Direction>
 
 fun main() {
     fun solve(input: List<String>, maxSteps: Int, stepRange: IntRange): Int {
         val queue = PriorityQueue(Comparator<Node> { a, b -> a.first - b.first })
         val visited = mutableSetOf<String>()
 
-        queue.add(Triple(0, Dot(0, 0), Direction.Horizontal))
-        queue.add(Triple(0, Dot(0, 0), Direction.Vertical))
+        queue.add(Triple(0, Point(0, 0), Direction.Horizontal))
+        queue.add(Triple(0, Point(0, 0), Direction.Vertical))
 
         while (queue.isNotEmpty()) {
             val (dist, dot, dir) = queue.poll()
@@ -43,7 +37,7 @@ fun main() {
                         newDistance += input[nX][dot.y].digitToInt()
 
                         if (i !in stepRange) continue
-                        queue.add(Triple(newDistance, Dot(nX, dot.y), Direction.Vertical))
+                        queue.add(Triple(newDistance, Point(nX, dot.y), Direction.Vertical))
                     }
 
                     newDistance = dist
@@ -55,7 +49,7 @@ fun main() {
                         newDistance += input[nX][dot.y].digitToInt()
 
                         if (i !in stepRange) continue
-                        queue.add(Triple(newDistance, Dot(nX, dot.y), Direction.Vertical))
+                        queue.add(Triple(newDistance, Point(nX, dot.y), Direction.Vertical))
                     }
                 }
 
@@ -69,7 +63,7 @@ fun main() {
                         newDistance += input[dot.x][nY].digitToInt()
 
                         if (i !in stepRange) continue
-                        queue.add(Triple(newDistance, Dot(dot.x, nY), Direction.Horizontal))
+                        queue.add(Triple(newDistance, Point(dot.x, nY), Direction.Horizontal))
                     }
 
                     newDistance = dist
@@ -81,7 +75,7 @@ fun main() {
                         newDistance += input[dot.x][nY].digitToInt()
 
                         if (i !in stepRange) continue
-                        queue.add(Triple(newDistance, Dot(dot.x, nY), Direction.Horizontal))
+                        queue.add(Triple(newDistance, Point(dot.x, nY), Direction.Horizontal))
                     }
                 }
             }
