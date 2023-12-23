@@ -15,6 +15,10 @@ data class Point(val x: Int, val y: Int) {
         Point(x, y + 1),
         Point(x, y - 1)
     )
+
+    fun within2DArray(array: List<List<*>>) = x in array.indices && y in array[0].indices
+
+    fun within2DArrayString(array: List<String>) = x in array.indices && y in array[0].indices
 }
 
 data class LongPoint(val x: Long, val y: Long) {
@@ -28,13 +32,11 @@ data class LongPoint(val x: Long, val y: Long) {
 }
 
 
-//operator fun <E> List<List<E>>.get(point: Point) = this[point.x][point.y]
-//
-//operator fun <E> List<MutableList<E>>.set(point: Point, value: E) {
-//    this[point.x][point.y] = value
-//}
-//
-//operator fun <E> MutableList<MutableList<E>>.set(point: Point, value: E) {
-//    this[point.x][point.y] = value
-//}
+operator fun <E> List<List<E>>.get(point: Point) = this[point.x][point.y]
+
+operator fun List<String>.get(point: Point) = this[point.x][point.y]
+
+operator fun <E> List<MutableList<E>>.set(point: Point, value: E) {
+    this[point.x][point.y] = value
+}
 
