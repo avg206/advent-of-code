@@ -1,124 +1,14 @@
-fun retrieveParamAddress(commands: List<Int>, position: Int, mode: Int) = when (mode) {
-  0 -> commands[position]
-  1 -> position
-
-  else -> throw Exception("Unknown mode $mode for retrieve")
-}
-
+import intCode.intCodeRunner
 
 fun main() {
-  fun run(program: String, defaultInput: Int): List<Int> {
-    val commands = program.split(',').map { it.toInt() }.toMutableList()
-    val output = mutableListOf<Int>()
-
-    var position = 0
-
-    while (true) {
-      val command = commands[position].toString()
-      val opcode = command.takeLast(2).toInt()
-      val modes = sequence {
-        yieldAll(command.dropLast(2).reversed().map { it.digitToInt() })
-        yieldAll(generateSequence { 0 })
-      }.iterator()
-
-      when (opcode) {
-        1 -> {
-          val a = retrieveParamAddress(commands, position + 1, modes.next())
-          val b = retrieveParamAddress(commands, position + 2, modes.next())
-          val address = retrieveParamAddress(commands, position + 3, modes.next())
-
-          commands[address] = commands[a] + commands[b]
-          position += 4
-        }
-
-        2 -> {
-          val a = retrieveParamAddress(commands, position + 1, modes.next())
-          val b = retrieveParamAddress(commands, position + 2, modes.next())
-          val address = retrieveParamAddress(commands, position + 3, modes.next())
-
-          commands[address] = commands[a] * commands[b]
-          position += 4
-        }
-
-        3 -> {
-          val address = retrieveParamAddress(commands, position + 1, modes.next())
-          commands[address] = defaultInput
-
-          position += 2
-        }
-
-        4 -> {
-          val address = retrieveParamAddress(commands, position + 1, modes.next())
-          output.add(commands[address])
-
-          position += 2
-        }
-
-        5 -> {
-          val a = retrieveParamAddress(commands, position + 1, modes.next())
-          val address = retrieveParamAddress(commands, position + 2, modes.next())
-
-          if (commands[a] != 0) {
-            position = commands[address]
-          } else {
-            position += 3
-          }
-        }
-
-        6 -> {
-          val a = retrieveParamAddress(commands, position + 1, modes.next())
-          val address = retrieveParamAddress(commands, position + 2, modes.next())
-
-          if (commands[a] == 0) {
-            position = commands[address]
-          } else {
-            position += 3
-          }
-        }
-
-        7 -> {
-          val a = retrieveParamAddress(commands, position + 1, modes.next())
-          val b = retrieveParamAddress(commands, position + 2, modes.next())
-          val address = retrieveParamAddress(commands, position + 3, modes.next())
-
-          if (commands[a] < commands[b]) {
-            commands[address] = 1
-          } else {
-            commands[address] = 0
-          }
-
-          position += 4
-        }
-
-        8 -> {
-          val a = retrieveParamAddress(commands, position + 1, modes.next())
-          val b = retrieveParamAddress(commands, position + 2, modes.next())
-          val address = retrieveParamAddress(commands, position + 3, modes.next())
-
-          if (commands[a] == commands[b]) {
-            commands[address] = 1
-          } else {
-            commands[address] = 0
-          }
-
-          position += 4
-        }
-
-        99 -> break
-
-        else -> throw Exception("Unknown opcode - $opcode")
-      }
-    }
-
-    return output
+  fun part1(program: String): Int {
+    val input = generateSequence { 1 }.iterator()
+    return intCodeRunner(program, input).last()
   }
 
-  fun part1(input: String): Int {
-    return run(input, 1).last()
-  }
-
-  fun part2(input: String): Int {
-    return run(input, 5).last()
+  fun part2(program: String): Int {
+    val input = generateSequence { 5 }.iterator()
+    return intCodeRunner(program, input).last()
   }
 
   // test if implementation meets criteria from the description, like:
