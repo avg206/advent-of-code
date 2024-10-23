@@ -2,13 +2,13 @@ import intCode.intCodeRunner
 
 fun main() {
   fun part1(program: String): Int {
-    val input = generateSequence { 1 }.iterator()
-    return intCodeRunner(program, input).last()
+    val input = generateSequence { 1L }.iterator()
+    return intCodeRunner(program, input).last().toInt()
   }
 
   fun part2(program: String): Int {
-    val input = generateSequence { 5 }.iterator()
-    return intCodeRunner(program, input).last()
+    val input = generateSequence { 5L }.iterator()
+    return intCodeRunner(program, input).last().toInt()
   }
 
   // test if implementation meets criteria from the description, like:

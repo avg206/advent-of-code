@@ -2,26 +2,26 @@ import intCode.intCodeRunner
 
 fun main() {
   fun runPipeline(combination: List<Int>, program: String) = combination.fold(0) { input, phase ->
-    val inputs = sequence { yieldAll(listOf(phase, input)) }
-    intCodeRunner(program, inputs.iterator()).iterator().next()
+    val inputs = sequence { yieldAll(listOf(phase.toLong(), input.toLong())) }
+    intCodeRunner(program, inputs.iterator()).iterator().next().toInt()
   }
 
   fun runEnhancedPipeline(combination: List<Int>, program: String): Int {
-    val signals = mutableListOf(0, 0, 0, 0, 0)
-    val inputs = combination.map { mutableListOf(it) }
+    val signals = mutableListOf(0L, 0L, 0L, 0L, 0L)
+    val inputs = combination.map { mutableListOf(it.toLong()) }
     val programs = inputs.map {
       val input = generateSequence { it.removeFirst() }
       intCodeRunner(program, input.iterator()).iterator()
     }
 
-    var currentInput = 0
+    var currentInput = 0L
 
     while (true) {
       for (i in programs.indices) {
         inputs[i].add(currentInput)
 
         if (!programs[i].hasNext()) {
-          return signals.last()
+          return signals.last().toInt()
         }
 
         val output = programs[i].next()
@@ -52,9 +52,9 @@ fun main() {
   check(part2("3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5") == 139_629_729)
   check(part2("3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10") == 18_216)
 
-//  val input = readInput("2019/2019_07")
-//  check(part1(input.first()) == 273_814)
-//  check(part2(input.first()) == 34_579_864)
-//  part1(input.first()).println()
-//  part2(input.first()).println()
+  val input = readInput("2019/2019_07")
+  check(part1(input.first()) == 273_814)
+  check(part2(input.first()) == 34_579_864)
+  part1(input.first()).println()
+  part2(input.first()).println()
 }
