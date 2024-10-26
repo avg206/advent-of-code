@@ -1,13 +1,6 @@
+import helpers.*
+
 fun main() {
-    fun gcd(a: Long, b: Long): Long {
-        if (b == 0L) return a
-        return gcd(b, a % b)
-    }
-
-    fun lcm(a: Long, b: Long): Long {
-        return a / gcd(a, b) * b
-    }
-
     fun find(node: String, routes: Map<String, Pair<String, String>>, instructions: List<Char>): Long {
         var current = node
         var count = 0L
