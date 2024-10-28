@@ -1,12 +1,13 @@
 package intCode
 
-fun retrieveParamAddress(commands: MutableMap<Long, Long>, position: Long, mode: Int, relativeBase: Long) = when (mode) {
-  0 -> commands.getOrDefault(position, 0L)
-  1 -> position
-  2 -> commands.getOrDefault(position, 0L) + relativeBase
+fun retrieveParamAddress(commands: MutableMap<Long, Long>, position: Long, mode: Int, relativeBase: Long) =
+  when (mode) {
+    0 -> commands.getOrDefault(position, 0L)
+    1 -> position
+    2 -> commands.getOrDefault(position, 0L) + relativeBase
 
-  else -> throw Exception("Unknown mode $mode for retrieve")
-}
+    else -> throw Exception("Unknown mode $mode for retrieve")
+  }
 
 fun modesSequence(command: String) = sequence {
   yieldAll(command.dropLast(2).reversed().map { it.digitToInt() })
@@ -15,10 +16,8 @@ fun modesSequence(command: String) = sequence {
 
 fun intCodeRunner(program: String, input: Iterator<Long>) = sequence {
   var relativeBase = 0L
-  val commands = program.split(',')
-    .mapIndexed { index, s -> index.toLong() to s.toLong() }
-    .associate { it }
-    .toMutableMap()
+  val commands =
+    program.split(',').mapIndexed { index, s -> index.toLong() to s.toLong() }.associate { it }.toMutableMap()
 
   var position = 0L
 
