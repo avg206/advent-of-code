@@ -1,42 +1,7 @@
+import helpers.point.Direction
 import helpers.point.Point
 import helpers.point.get
 import intCode.intCodeRunner
-
-
-enum class MoveDirection(val move: Point) {
-  Up(Point(-1, 0)),
-  Left(Point(0, -1)),
-  Right(Point(0, 1)),
-  Down(Point(1, 0));
-
-  fun left() = when (this) {
-    Up -> Point(0, -1)
-    Left -> Point(1, 0)
-    Right -> Point(-1, 0)
-    Down -> Point(0, 1)
-  }
-
-  fun right() = when (this) {
-    Up -> Point(0, 1)
-    Left -> Point(-1, 0)
-    Right -> Point(1, 0)
-    Down -> Point(0, -1)
-  }
-
-  fun toLeft() = when (this) {
-    Up -> Left
-    Left -> Down
-    Right -> Up
-    Down -> Right
-  }
-
-  fun toRight() = when (this) {
-    Up -> Right
-    Left -> Up
-    Right -> Down
-    Down -> Left
-  }
-}
 
 fun main() {
   fun readWorld(program: String): List<List<Char>> {
@@ -113,10 +78,10 @@ fun main() {
 
     var robot = findRobot(world)
     var direction = when (world[robot]) {
-      '^' -> MoveDirection.Up
-      'v' -> MoveDirection.Down
-      '<' -> MoveDirection.Left
-      '>' -> MoveDirection.Right
+      '^' -> Direction.Up
+      'v' -> Direction.Down
+      '<' -> Direction.Left
+      '>' -> Direction.Right
 
       else -> throw Exception("Unknown direction")
     }
@@ -126,9 +91,9 @@ fun main() {
 
     while (true) {
       // Can move ?
-      if (queryWorld(robot + direction.move) == '#') {
+      if (queryWorld(robot + direction.moveList()) == '#') {
         path += 1
-        robot += direction.move
+        robot += direction.moveList()
         continue
       }
 

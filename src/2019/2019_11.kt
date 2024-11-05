@@ -1,29 +1,13 @@
+import helpers.point.Direction
+import helpers.point.Point
 import intCode.intCodeRunner
 
-enum class RobotDirection {
-  Up, Right, Left, Down
-}
 
 fun main() {
-  fun newDirection(current: RobotDirection, change: Int): RobotDirection {
+  fun newDirection(current: Direction, change: Int): Direction {
     return when (change) {
-      0 -> {
-        when (current) {
-          RobotDirection.Up -> RobotDirection.Left
-          RobotDirection.Left -> RobotDirection.Down
-          RobotDirection.Down -> RobotDirection.Right
-          RobotDirection.Right -> RobotDirection.Up
-        }
-      }
-
-      1 -> {
-        when (current) {
-          RobotDirection.Up -> RobotDirection.Right
-          RobotDirection.Right -> RobotDirection.Down
-          RobotDirection.Down -> RobotDirection.Left
-          RobotDirection.Left -> RobotDirection.Up
-        }
-      }
+      0 -> current.toLeft()
+      1 -> current.toRight()
 
       else -> throw Exception()
     }
@@ -33,7 +17,7 @@ fun main() {
     val cells = mutableMapOf(Point(0, 0) to 1)
 
     var current = Point(0, 0)
-    var direction = RobotDirection.Up
+    var direction = Direction.Up
 
     val input = generateSequence { cells.getOrDefault(current, 0).toLong() }
     val program = intCodeRunner(programCode, input.iterator()).iterator()
@@ -45,12 +29,7 @@ fun main() {
       cells[current] = newColor
       direction = newDirection(direction, directionChange)
 
-      current += when (direction) {
-        RobotDirection.Up -> Point(1, 0)
-        RobotDirection.Right -> Point(0, 1)
-        RobotDirection.Down -> Point(-1, 0)
-        RobotDirection.Left -> Point(0, -1)
-      }
+      current += direction.moveSpace()
     }
 
     for (x in 0 downTo -5) {
