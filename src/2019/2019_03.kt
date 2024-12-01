@@ -1,6 +1,6 @@
+import helpers.point.Point
 import kotlin.math.max
 import kotlin.math.min
-import helpers.point.Point
 
 fun main() {
   fun generateWire(moves: String): List<Point> {

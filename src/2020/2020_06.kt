@@ -1,47 +1,47 @@
 fun main() {
-    fun parseGroups(input: List<String>): List<MutableList<String>> {
-        val initialList = mutableListOf(mutableListOf<String>())
+  fun parseGroups(input: List<String>): List<MutableList<String>> {
+    val initialList = mutableListOf(mutableListOf<String>())
 
-        return input.fold(initialList) { acc, s ->
-            when (s) {
-                "" -> {
-                    acc.add(mutableListOf()); acc
-                }
-
-                else -> {
-                    acc.last().add(s); acc
-                }
-            }
+    return input.fold(initialList) { acc, s ->
+      when (s) {
+        "" -> {
+          acc.add(mutableListOf()); acc
         }
-    }
 
-    fun part1(input: List<String>): Int {
-        val groups = parseGroups(input)
-
-        return groups.sumOf {
-            it.fold(mutableSetOf<Char>()) { acc, s ->
-                s.forEach { c -> acc.add(c) }; acc
-            }.size
+        else -> {
+          acc.last().add(s); acc
         }
+      }
     }
+  }
 
-    fun part2(input: List<String>): Int {
-        val groups = parseGroups(input)
+  fun part1(input: List<String>): Int {
+    val groups = parseGroups(input)
 
-        return groups.sumOf {
-            it.fold(mutableMapOf<Char, Int>()) { acc, s ->
-                s.forEach { c -> acc[c] = (acc[c] ?: 0) + 1 }; acc
-            }.values.filter { count -> it.size == count }.size
-        }
+    return groups.sumOf {
+      it.fold(mutableSetOf<Char>()) { acc, s ->
+        s.forEach { c -> acc.add(c) }; acc
+      }.size
     }
+  }
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/2020_06_test")
-    part2(testInput)
-    check(part1(testInput) == 11)
-    check(part2(testInput) == 6)
+  fun part2(input: List<String>): Int {
+    val groups = parseGroups(input)
 
-    val input = readInput("2020/2020_06")
-    part1(input).println()
-    part2(input).println()
+    return groups.sumOf {
+      it.fold(mutableMapOf<Char, Int>()) { acc, s ->
+        s.forEach { c -> acc[c] = (acc[c] ?: 0) + 1 }; acc
+      }.values.filter { count -> it.size == count }.size
+    }
+  }
+
+  // test if implementation meets criteria from the description, like:
+  val testInput = readInput("2020/2020_06_test")
+  part2(testInput)
+  check(part1(testInput) == 11)
+  check(part2(testInput) == 6)
+
+  val input = readInput("2020/2020_06")
+  part1(input).println()
+  part2(input).println()
 }

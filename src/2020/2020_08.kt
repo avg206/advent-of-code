@@ -1,77 +1,77 @@
 fun main() {
-    fun checkCommandsSet(commands: List<Pair<String, Int>>): Pair<Boolean, Int> {
-        val visited = mutableSetOf<Int>()
-        var accumulator = 0
-        var index = 0
+  fun checkCommandsSet(commands: List<Pair<String, Int>>): Pair<Boolean, Int> {
+    val visited = mutableSetOf<Int>()
+    var accumulator = 0
+    var index = 0
 
-        while (index < commands.size) {
-            if (index in visited) {
-                break
-            }
+    while (index < commands.size) {
+      if (index in visited) {
+        break
+      }
 
-            visited.add(index)
-            val command = commands[index]
+      visited.add(index)
+      val command = commands[index]
 
-            when (command.first) {
-                "acc" -> accumulator += command.second
+      when (command.first) {
+        "acc" -> accumulator += command.second
 
-                "jmp" -> {
-                    index += command.second; continue
-                }
-            }
-            
-            index += 1
+        "jmp" -> {
+          index += command.second; continue
         }
+      }
 
-        if (index >= commands.size) {
-            return Pair(true, accumulator)
-        }
-
-        return Pair(false, accumulator)
+      index += 1
     }
 
-    fun part1(input: List<String>): Int {
-        val commands = input.map { it.split(" ") }.map { Pair(it[0], it[1].toInt()) }
+    if (index >= commands.size) {
+      return Pair(true, accumulator)
+    }
 
-        val (_, accumulator) = checkCommandsSet(commands)
+    return Pair(false, accumulator)
+  }
 
+  fun part1(input: List<String>): Int {
+    val commands = input.map { it.split(" ") }.map { Pair(it[0], it[1].toInt()) }
+
+    val (_, accumulator) = checkCommandsSet(commands)
+
+    return accumulator
+  }
+
+  fun part2(input: List<String>): Int {
+    val originalCommands = input.map { it.split(" ") }.map { Pair(it[0], it[1].toInt()) }
+
+    for (i in originalCommands.indices) {
+      if (originalCommands[i].first == "acc") {
+        continue
+      }
+
+      val commands = originalCommands.toMutableList()
+      commands[i] = Pair(
+        when (commands[i].first) {
+          "nop" -> "jmp"
+          "jmp" -> "nop"
+          else -> throw Exception()
+        },
+        commands[i].second
+      )
+
+      val (successful, accumulator) = checkCommandsSet(commands)
+
+      if (successful) {
         return accumulator
+      }
     }
 
-    fun part2(input: List<String>): Int {
-        val originalCommands = input.map { it.split(" ") }.map { Pair(it[0], it[1].toInt()) }
+    throw Exception()
+  }
 
-        for (i in originalCommands.indices) {
-            if (originalCommands[i].first == "acc") {
-                continue
-            }
+  // test if implementation meets criteria from the description, like:
+  val testInput = readInput("2020/2020_08_test")
+  check(part1(testInput) == 5)
+  check(part2(testInput) == 8)
 
-            val commands = originalCommands.toMutableList()
-            commands[i] = Pair(
-                    when (commands[i].first) {
-                        "nop" -> "jmp"
-                        "jmp" -> "nop"
-                        else -> throw Exception()
-                    },
-                    commands[i].second
-            )
-
-            val (successful, accumulator) = checkCommandsSet(commands)
-
-            if (successful) {
-                return accumulator
-            }
-        }
-
-        throw Exception()
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("2020/2020_08_test")
-    check(part1(testInput) == 5)
-    check(part2(testInput) == 8)
-
-    val input = readInput("2020/2020_08")
-    part1(input).println()
-    part2(input).println()
+  val input = readInput("2020/2020_08")
+  part1(input).println()
+  part2(input).println()
 }
