@@ -1,66 +1,23 @@
 fun main() {
   fun solve(input: List<String>): Pair<Int, Int> {
-    val rules = mutableMapOf<Int, List<Int>>()
-    val rulesEnd = input.indexOfFirst { it.isBlank() }
+    val (rules, manuals) = input.joinToString("\r\n").split("\r\n\r\n")
+    val orderRules = rules
+      .lines()
+      .map { row -> row.split("|").map { it.toInt() } }
+      .map { (a, b) -> Pair(a, b) }
 
-    for (i in 0..rulesEnd) {
-      if (input[i].isBlank()) {
-        break
-      }
-
-      val (from, to) = input[i].split("|").map { it.toInt() }
-      rules[to] = (rules[to] ?: listOf()) + from
+    val items = manuals.lines().map { row -> row.split(",").map { it.toInt() } }
+    val sortedItems = items.map { manual ->
+      Pair(
+        manual,
+        manual.sortedWith { a, b -> if (orderRules.any { it == Pair(b, a) }) 1 else -1 }
+      )
     }
 
-    val manuals = input.subList(rulesEnd + 1, input.size).map { row -> row.split(",").map { it.toInt() } }
-
-    var sumOfCorrect = 0
-    val toBeFixed = mutableListOf<List<Int>>()
-
-    for (manual in manuals) {
-      val printed = mutableSetOf<Int>()
-
-      val valid = manual.all { page ->
-        val toBePrinted = rules[page] ?: listOf()
-        printed.add(page)
-
-        toBePrinted.filter { it in manual }.all { it in printed }
-      }
-
-      if (valid) {
-        sumOfCorrect += manual[manual.size / 2]
-      } else {
-        toBeFixed.add(manual)
-      }
-    }
-
-    fun dfs(printed: List<Int>, remaining: Set<Int>, manual: Set<Int>): List<Int>? {
-      if (remaining.isEmpty()) return printed
-
-      for (page in remaining) {
-        val toBePrinted = rules[page] ?: listOf()
-
-        val canBeNext = toBePrinted.filter { it in manual }.all { it in printed }
-
-        if (canBeNext) {
-          val attempt = dfs(printed + page, remaining - page, manual)
-
-          if (attempt != null) return attempt
-        }
-      }
-
-      return null
-    }
-
-    var sumOfFixed = 0
-
-    for (manual in toBeFixed) {
-      val fixedVersion = dfs(listOf(), manual.toSet(), manual.toSet()) ?: throw Exception("Unfixable manual - $manual")
-
-      sumOfFixed += fixedVersion[fixedVersion.size / 2]
-    }
-
-    return Pair(sumOfCorrect, sumOfFixed)
+    return Pair(
+      sortedItems.filter { (a, b) -> a == b }.sumOf { (a, _) -> a[a.size / 2] },
+      sortedItems.filter { (a, b) -> a != b }.sumOf { (_, b) -> b[b.size / 2] },
+    )
   }
 
   // test if implementation meets criteria from the description, like:
