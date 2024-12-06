@@ -1,4 +1,5 @@
 import helpers.point.Point
+import helpers.gridReader
 
 fun main() {
   fun part1(input: List<String>): Int {
@@ -15,25 +16,23 @@ fun main() {
 
     var answer = 0
 
-    for (i in input.indices) {
-      for (j in input.first().indices) {
-        if (input[i][j] == 'X') {
-          for (dir in directions) {
-            var curr = Point(i, j)
-            var valid = true
+    gridReader(input) { char, i, j ->
+      if (char != 'X') return@gridReader
 
-            for (char in listOf('M', 'A', 'S')) {
-              curr += dir
+      for (dir in directions) {
+        var curr = Point(i, j)
+        var valid = true
 
-              if (!curr.within2DArrayString(input) || input[curr.x][curr.y] != char) {
-                valid = false
-              }
-            }
+        for (target in listOf('M', 'A', 'S')) {
+          curr += dir
 
-            if (valid) {
-              answer += 1
-            }
+          if (!curr.within2DArrayString(input) || input[curr.x][curr.y] != target) {
+            valid = false
           }
+        }
+
+        if (valid) {
+          answer += 1
         }
       }
     }
@@ -50,31 +49,29 @@ fun main() {
         .joinToString("")
     }
 
-    for (i in input.indices) {
-      for (j in input.indices) {
-        if (input[i][j] != 'A') continue
+    gridReader(input) { char, i, j ->
+      if (char != 'A') return@gridReader
 
-        // Bottom-Left to Top-Right
-        val set1 = takeMas(
-          listOf(
-            Point(i - 1, j - 1),
-            Point(i, j),
-            Point(i + 1, j + 1),
-          )
+      // Bottom-Left to Top-Right
+      val set1 = takeMas(
+        listOf(
+          Point(i - 1, j - 1),
+          Point(i, j),
+          Point(i + 1, j + 1),
         )
+      )
 
-        // Top-Left to Bottom-Right
-        val set2 = takeMas(
-          listOf(
-            Point(i + 1, j - 1),
-            Point(i, j),
-            Point(i - 1, j + 1),
-          )
+      // Top-Left to Bottom-Right
+      val set2 = takeMas(
+        listOf(
+          Point(i + 1, j - 1),
+          Point(i, j),
+          Point(i - 1, j + 1),
         )
+      )
 
-        if ((set1 == "MAS" || set1 == "SAM") && (set2 == "MAS" || set2 == "SAM")) {
-          answer += 1
-        }
+      if ((set1 == "MAS" || set1 == "SAM") && (set2 == "MAS" || set2 == "SAM")) {
+        answer += 1
       }
     }
 

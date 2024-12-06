@@ -1,5 +1,6 @@
 import helpers.point.Direction
 import helpers.point.Point
+import helpers.gridReader
 
 fun main() {
   fun solve(input: List<String>): Pair<Int, Int> {
@@ -9,12 +10,10 @@ fun main() {
 
     var start = Point(0, 0)
 
-    for (i in input.indices) {
-      for (j in input[i].indices) {
-        when (input[i][j]) {
-          '#' -> map[i][j] = 1
-          '^' -> start = Point(i, j)
-        }
+    gridReader(input) { char, i, j ->
+      when (char) {
+        '#' -> map[i][j] = 1
+        '^' -> start = Point(i, j)
       }
     }
 
