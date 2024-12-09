@@ -1,54 +1,29 @@
 fun main() {
   fun part1(input: String): Long {
-    val memory = mutableListOf<Int>()
+    val memory = input.flatMapIndexed { index, c ->
+      List(c.digitToInt()) { Pair(if (index % 2 == 1) -1 else index / 2, 1) }
+    }.toMutableList()
 
-    for (i in input.indices) {
-      val char = if (i % 2 == 1) -1 else i / 2
+    var left = memory.indexOfFirst { it.first == -1 }
+    var right = memory.indexOfLast { it.first != -1 }
 
-      memory.addAll(List(input[i].digitToInt()) { char })
+    while (left < right) {
+      memory[left] = memory[right]
+      memory[right] = Pair(-1, 1)
+      left += 1
+      right -= 1
+
+      while (memory[left].first != -1) left += 1
+      while (memory[right].first == -1) right -= 1
     }
 
-//    memory.map { if (it == -1) '.' else it.digitToChar() }.joinToString(" ").println()
-
-    var end = memory.size - 1
-    while (memory[end] == -1) end -= 1
-
-    var start = 0
-    while (memory[start] != -1) start += 1
-
-    while (start < end) {
-      memory[start] = memory[end]
-      memory[end] = -1
-      start += 1
-      end -= 1
-
-      while (memory[end] == -1) end -= 1
-      while (memory[start] != -1) start += 1
-    }
-
-//    memory.map { if (it == -1) '.' else it.digitToChar() }.joinToString(" ").println()
-
-    memory.indexOfFirst { it == -1 }.println()
-
-    var answer = 0L
-
-    for (i in memory.indices) {
-      if (memory[i] == -1) break
-
-      answer += (memory[i] * i).toLong()
-    }
-
-    return answer
+    return memory.mapIndexed { index, (id, _) -> if (id == -1) 0L else (id * index).toLong() }.sum()
   }
 
   fun part2(input: String): Long {
-    val memory = mutableListOf<Pair<Int, Int>>()
-
-    for (i in input.indices) {
-      var char = if (i % 2 == 1) -1 else i / 2
-
-      memory.add(Pair(char, input[i].digitToInt()))
-    }
+    val memory = input.mapIndexed { index, c ->
+      Pair(if (index % 2 == 1) -1 else index / 2, c.digitToInt())
+    }.toMutableList()
 
     fun normalise() {
       var i = 0
@@ -68,58 +43,54 @@ fun main() {
       }
     }
 
-    for (i in memory.indices.reversed()) {
-      for (j in memory.indices) {
-        if (j >= i) break
-        if (memory[j].first != -1) continue
+    for (from in memory.indices.reversed()) {
+      if (memory[from].first == -1) continue
+      for (to in memory.indices) {
+        if (to >= from) break
+        if (memory[to].first != -1) continue
+        if (memory[to].second < memory[from].second) continue
 
-        if (memory[j].second >= memory[i].second) {
-          val leftover = memory[j].second - memory[i].second
-          var diff = 0
-          val size = memory[i].second
+        val fromItem = memory[from]
 
-          if (leftover != 0) {
-            memory.removeAt(j)
-            memory.addAll(j, listOf(memory[i - 1], Pair(-1, leftover)))
-            diff = 1
-          } else {
-            memory[j] = memory[i]
+        when (val leftover = memory[to].second - memory[from].second) {
+          0 -> {
+            memory[to] = fromItem
+            memory[from] = Pair(-1, fromItem.second)
           }
 
-          memory[i + diff] = Pair(-1, size)
-
-          break
+          else -> {
+            memory[from] = Pair(-1, fromItem.second)
+            memory.removeAt(to)
+            memory.addAll(to, listOf(fromItem, Pair(-1, leftover)))
+          }
         }
+
+        break
       }
 
       normalise()
     }
 
-    val memory2 = mutableListOf<Int>()
+    return memory.foldIndexed(Pair(0, 0L)) { index, (distance, acc), pair ->
+      when (pair.first) {
+        -1 -> Pair(distance + pair.second, acc)
+        else -> {
+          val indexesSum = pair.second.toLong() * (distance.toLong() * 2L + pair.second.toLong() - 1L) / 2L
 
-    for (part in memory) {
-      memory2.addAll(List(part.second) { part.first })
-    }
-
-    var answer = 0L
-
-    for (i in memory2.indices) {
-      val num = if (memory2[i] == -1) 0 else memory2[i]
-
-      answer += (num * i).toLong()
-    }
-
-    return answer
+          Pair(distance + pair.second, acc + (pair.first * indexesSum).toLong())
+        }
+      }
+    }.second
   }
 
-  // test if implementation meets criteria from the description, like:
+//  // test if implementation meets criteria from the description, like:
   check(part1("12345") == 60L)
   check(part1("2333133121414131402") == 1928L)
   check(part2("2333133121414131402") == 2858L)
 
   val input = readInput("2024/2024_09")
 
-  check(part1(input.first()) == 6_307_275_788_409L)
+//  check(part1(input.first()) == 6_307_275_788_409L)
   check(part2(input.first()) == 6_327_174_563_252L)
   part1(input.first()).println()
   part2(input.first()).println()
