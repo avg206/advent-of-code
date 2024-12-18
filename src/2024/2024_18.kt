@@ -1,47 +1,38 @@
+import helpers.graph.bfs
 import helpers.point.Point
+import kotlin.math.abs
 
 fun main() {
   fun solve(input: List<String>, dimension: Int, startingCount: Int): Pair<Int, String> {
-    val map = MutableList(dimension + 1) { MutableList(dimension + 1) { 0 } }
     val bytes = input.map { row -> row.split(",").map { it.toInt() } }
 
-    fun bfs(): Int {
-      val queue = mutableListOf(Point(0, 0) to 0)
-      val visited = mutableSetOf<Point>()
+    val buildMap = { initialBytes: List<List<Int>> ->
+      val result = MutableList(dimension + 1) { MutableList(dimension + 1) { 0 } }
 
-      while (queue.isNotEmpty()) {
-        val (current, distance) = queue.removeFirst()
+      initialBytes.forEach { (y, x) -> result[x][y] = 1 }
+      result
+    }
 
-        if (current == Point(dimension, dimension)) {
-          return distance
+    val run = { map: List<List<Int>> ->
+      bfs(
+        start = listOf(Point(0, 0) to 0),
+        target = Point(dimension, dimension),
+        comparator = compareBy { it.second },
+        nextSteps = { (key, value) ->
+          key.neighbours().filter { it.within2DArray(map) && map[it.x][it.y] == 0 }.map { it to (value + 1) }
         }
-
-        if (current in visited) continue
-        visited.add(current)
-
-        current.neighbours().filter { it.within2DArray(map) && map[it.x][it.y] == 0 }.forEach { target ->
-          queue.add(target to (distance + 1))
-        }
-      }
-
-      return -1
+      )
     }
 
-    bytes.take(startingCount).forEach { (y, x) ->
-      map[x][y] = 1
-    }
+    val (_, initialFastestRoute) = run(buildMap(bytes.take(startingCount))) ?: throw Exception("No route as all")
 
-    val initialFastestRoute = bfs()
+    val index = abs(bytes.indices.toList().binarySearch { middle ->
+      val distance = run(buildMap(bytes.take(middle + 1)))
 
-    bytes.drop(startingCount).forEach { (y, x) ->
-      map[x][y] = 1
+      if (distance == null) 1 else -1
+    })
 
-      if (bfs() == -1) {
-        return initialFastestRoute to "$y,$x"
-      }
-    }
-
-    throw Exception("None of bytes block the road")
+    return initialFastestRoute to bytes[index - 1].joinToString(",")
   }
 
   // test if implementation meets criteria from the description, like:
