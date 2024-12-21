@@ -3,6 +3,17 @@ package helpers.point
 enum class Direction {
   Up, Left, Right, Down;
 
+  companion object {
+    fun charToDirection(char: Char) = when (char) {
+      '^' -> Direction.Up
+      'v' -> Direction.Down
+      '<' -> Direction.Left
+      '>' -> Direction.Right
+
+      else -> throw Exception("Unknown char - $char")
+    }
+  }
+
   fun moveSpace() = when (this) {
     Up -> Point(1, 0)
     Right -> Point(0, 1)
