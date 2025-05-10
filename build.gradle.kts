@@ -6,6 +6,10 @@ repositories {
   mavenCentral()
 }
 
+dependencies {
+  implementation("io.strikt:strikt-core:0.34.0")
+}
+
 sourceSets {
   main {
     kotlin.srcDir("src")
