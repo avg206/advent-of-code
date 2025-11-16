@@ -2,8 +2,6 @@ package leetcode
 
 fun main() {
   fun solveSudoku(mainBoard: Array<CharArray>): Unit {
-    fun prettyPrint(board: Array<CharArray>) = println(board.joinToString("\r\n") { it.toList().joinToString(" ") })
-
     fun isFilled(board: Array<CharArray>) = (0..8).all { row -> (0..8).all { col -> board[row][col] != '.' } }
 
     fun mergeResult(target: Array<CharArray>, source: Array<CharArray>) {
@@ -76,18 +74,14 @@ fun main() {
 
         if (isFilled(copy)) {
           mergeResult(board, copy)
-
-          println("Successful solved $pos")
           return
         }
 
-        // Try another guess
+        // Guess another cell
         complexSolving(copy)
 
         if (isFilled(copy)) {
           mergeResult(board, copy)
-
-          println("Successful solved $pos after complex solving")
           return
         }
       }
@@ -98,11 +92,6 @@ fun main() {
 
     // Solving with guess logic if needed
     complexSolving(mainBoard)
-
-    // Render solved board
-    println("Solved board:")
-    prettyPrint(mainBoard)
-    println("----")
   }
 
   solveSudoku(
