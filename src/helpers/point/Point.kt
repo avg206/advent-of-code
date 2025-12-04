@@ -15,6 +15,11 @@ data class Point(val x: Int, val y: Int) {
     Point(x + 1, y), Point(x - 1, y), Point(x, y + 1), Point(x, y - 1)
   )
 
+  fun extendedNeighbours() = listOf(
+    Point(x + 1, y), Point(x - 1, y), Point(x, y + 1), Point(x, y - 1),
+    Point(x + 1, y + 1), Point(x + 1, y - 1), Point(x - 1, y - 1), Point(x - 1, y + 1)
+  )
+
   fun within2DArray(array: List<List<*>>) = x in array.indices && y in array[0].indices
 
   fun within2DArrayString(array: List<String>) = x in array.indices && y in array[0].indices
