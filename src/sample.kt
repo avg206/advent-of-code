@@ -11,6 +11,8 @@ fun main() {
   val testInput = readInput("<year>/<year>_<day>_test")
   check(part1(testInput) == 1)
 
+  println("=======================")
+
   val input = readInput("<year>/<year>_<day>")
   part1(input).println()
   part2(input).println()
