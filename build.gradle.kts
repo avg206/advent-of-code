@@ -8,6 +8,7 @@ repositories {
 
 dependencies {
   implementation("io.strikt:strikt-core:0.34.0")
+  implementation("tools.aqua:z3-turnkey:4.14.1")
 }
 
 sourceSets {
